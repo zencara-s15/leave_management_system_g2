@@ -7,12 +7,19 @@ import '../../utils/app_constants.dart';
 import '../../widgets/leave_balance_card_widget.dart';
 
 class LeaveBalanceScreen extends StatelessWidget {
-  const LeaveBalanceScreen({super.key});
+  final VoidCallback? onBackPressed;
+
+  const LeaveBalanceScreen({
+    super.key,
+    this.onBackPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     final user = context.watch<AuthProvider>().currentUser!;
     final leaveTypes = context.watch<LeaveProvider>().getActiveLeaveTypes();
+    final navigator = Navigator.of(context);
+    final canPop = navigator.canPop();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -20,7 +27,18 @@ class LeaveBalanceScreen extends StatelessWidget {
         title: const Text('Leave Balance'),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
-        automaticallyImplyLeading: false,
+        leading: (canPop || onBackPressed != null)
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  if (canPop) {
+                    navigator.maybePop();
+                    return;
+                  }
+                  onBackPressed?.call();
+                },
+              )
+            : null,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

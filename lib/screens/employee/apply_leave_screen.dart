@@ -11,7 +11,12 @@ import '../../widgets/custom_button_widget.dart';
 import '../../widgets/custom_text_field_widget.dart';
 
 class ApplyLeaveScreen extends StatefulWidget {
-  const ApplyLeaveScreen({super.key});
+  final VoidCallback? onBackPressed;
+
+  const ApplyLeaveScreen({
+    super.key,
+    this.onBackPressed,
+  });
 
   @override
   State<ApplyLeaveScreen> createState() => _ApplyLeaveScreenState();
@@ -128,6 +133,8 @@ class _ApplyLeaveScreenState extends State<ApplyLeaveScreen> {
     final user = context.watch<AuthProvider>().currentUser!;
     final leaveProvider = context.watch<LeaveProvider>();
     final leaveTypes = leaveProvider.getActiveLeaveTypes();
+    final navigator = Navigator.of(context);
+    final canPop = navigator.canPop();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -135,7 +142,18 @@ class _ApplyLeaveScreenState extends State<ApplyLeaveScreen> {
         title: const Text('Apply for Leave'),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
-        automaticallyImplyLeading: false,
+        leading: (canPop || widget.onBackPressed != null)
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  if (canPop) {
+                    navigator.maybePop();
+                    return;
+                  }
+                  widget.onBackPressed?.call();
+                },
+              )
+            : null,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppConstants.pagePadding),

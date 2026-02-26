@@ -22,14 +22,7 @@ class EmployeeHomeScreen extends StatefulWidget {
 
 class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
   int _currentIndex = 0;
-
-  // Keep tabs alive when switching
-  final List<Widget> _pages = const [
-    _DashboardTab(),
-    ApplyLeaveScreen(),
-    LeaveHistoryScreen(),
-    LeaveBalanceScreen(),
-  ];
+  int _previousIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +32,34 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
       // TODO: Optionally wrap in a custom shell with a shared top AppBar.
       body: IndexedStack(
         index: _currentIndex,
-        children: _pages,
+        children: [
+          const _DashboardTab(),
+          ApplyLeaveScreen(
+            onBackPressed: () {
+              setState(() => _currentIndex = _previousIndex);
+            },
+          ),
+          LeaveHistoryScreen(
+            onBackPressed: () {
+              setState(() => _currentIndex = _previousIndex);
+            },
+          ),
+          LeaveBalanceScreen(
+            onBackPressed: () {
+              setState(() => _currentIndex = _previousIndex);
+            },
+          ),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
-        onDestinationSelected: (i) => setState(() => _currentIndex = i),
+        onDestinationSelected: (i) {
+          if (i == _currentIndex) return;
+          setState(() {
+            _previousIndex = _currentIndex;
+            _currentIndex = i;
+          });
+        },
         destinations: [
           const NavigationDestination(
             icon: Icon(Icons.dashboard_outlined),
