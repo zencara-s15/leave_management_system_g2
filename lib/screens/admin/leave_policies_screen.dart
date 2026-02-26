@@ -267,6 +267,10 @@ class _PolicyFormSheetState extends State<_PolicyFormSheet> {
     );
   }
 
+  void _handleCancel() {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -355,10 +359,24 @@ class _PolicyFormSheetState extends State<_PolicyFormSheet> {
                 activeThumbColor: AppColors.adminColor,
               ),
               const SizedBox(height: 16),
-              PrimaryButton(
-                label: _isEdit ? 'Save Changes' : 'Create Policy',
-                color: AppColors.adminColor,
-                onPressed: _handleSave,
+              Row(
+                children: [
+                  Expanded(
+                    child: SecondaryButton(
+                      label: 'Cancel',
+                      color: AppColors.adminColor,
+                      onPressed: _handleCancel,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: PrimaryButton(
+                      label: _isEdit ? 'Save Changes' : 'Create Policy',
+                      color: AppColors.adminColor,
+                      onPressed: _handleSave,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
             ],
