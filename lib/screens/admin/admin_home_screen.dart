@@ -37,31 +37,52 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
         onDestinationSelected: (i) => setState(() => _currentIndex = i),
-        indicatorColor: AppColors.adminColor.withValues(alpha: 0.15),
+
+        // make background white
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+
+        // remove pill/hover effect
+        indicatorColor: Colors.transparent,
+
+        // selected color
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const TextStyle(
+              color: Color(0xFF4F46E5),
+              fontWeight: FontWeight.w600,
+            );
+          }
+          return const TextStyle(
+            color: Colors.grey,
+            fontWeight: FontWeight.w500,
+          );
+        }),
+
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.dashboard_outlined),
-            selectedIcon: Icon(Icons.dashboard),
+            selectedIcon: Icon(Icons.dashboard, color: Color(0xFF4F46E5)),
             label: 'Dashboard',
           ),
           NavigationDestination(
             icon: Icon(Icons.people_outline),
-            selectedIcon: Icon(Icons.people),
+            selectedIcon: Icon(Icons.people, color: Color(0xFF4F46E5)),
             label: 'Employees',
           ),
           NavigationDestination(
             icon: Icon(Icons.policy_outlined),
-            selectedIcon: Icon(Icons.policy),
+            selectedIcon: Icon(Icons.policy, color: Color(0xFF4F46E5)),
             label: 'Policies',
           ),
           NavigationDestination(
             icon: Icon(Icons.bar_chart_outlined),
-            selectedIcon: Icon(Icons.bar_chart),
+            selectedIcon: Icon(Icons.bar_chart, color: Color(0xFF4F46E5)),
             label: 'Reports',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
+            selectedIcon: Icon(Icons.person, color: Color(0xFF4F46E5)),
             label: 'Profile',
           ),
         ],
@@ -101,19 +122,44 @@ class _AdminDashboardTab extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
           children: [
-            const Text('Admin Panel',
-                style: TextStyle(fontSize: 12, color: Colors.white70)),
-            Text(user.name,
-                style: const TextStyle(
+            // ⭐ Profile Circle
+            const CircleAvatar(
+              radius: 18,
+              backgroundColor: Color(0xFF4F46E5),
+              child: Text(
+                'S',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+            const SizedBox(width: 10),
+
+            // ⭐ Text section
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Admin Panel',
+                  style: TextStyle(fontSize: 12, color: Colors.black87),
+                ),
+                Text(
+                  user.name, // System Admin
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white)),
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
-        backgroundColor: AppColors.adminColor,
+        // backgroundColor: AppColors.adminColor,
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
         actions: [
@@ -121,6 +167,7 @@ class _AdminDashboardTab extends StatelessWidget {
             children: [
               IconButton(
                 icon: const Icon(Icons.notifications_outlined),
+                color: Colors.black87,
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -139,7 +186,7 @@ class _AdminDashboardTab extends StatelessWidget {
                     ),
                     child: Text('$unread',
                         style: const TextStyle(
-                            color: Colors.white, fontSize: 9)),
+                            color: Colors.black, fontSize: 9)),
                   ),
                 ),
             ],
