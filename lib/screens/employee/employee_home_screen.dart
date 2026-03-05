@@ -44,25 +44,46 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
         onDestinationSelected: (i) => setState(() => _currentIndex = i),
-        destinations: [
-          const NavigationDestination(
+        // make background white
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+
+        // remove pill/hover effect
+        indicatorColor: Colors.transparent,
+
+        // selected color
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const TextStyle(
+              color: Color(0xFF4F46E5),
+              fontWeight: FontWeight.w600,
+            );
+          }
+          return const TextStyle(
+            color: Colors.grey,
+            fontWeight: FontWeight.w500,
+          );
+        }),
+
+        destinations: const [
+          NavigationDestination(
             icon: Icon(Icons.dashboard_outlined),
-            selectedIcon: Icon(Icons.dashboard),
+            selectedIcon: Icon(Icons.dashboard, color: Color(0xFF4F46E5)),
             label: 'Home',
           ),
-          const NavigationDestination(
+          NavigationDestination(
             icon: Icon(Icons.add_circle_outline),
-            selectedIcon: Icon(Icons.add_circle),
+            selectedIcon: Icon(Icons.add_circle, color: Color(0xFF4F46E5)),
             label: 'Apply',
           ),
-          const NavigationDestination(
+          NavigationDestination(
             icon: Icon(Icons.history_outlined),
-            selectedIcon: Icon(Icons.history),
+            selectedIcon: Icon(Icons.history, color: Color(0xFF4F46E5)),
             label: 'History',
           ),
-          const NavigationDestination(
+          NavigationDestination(
             icon: Icon(Icons.account_balance_wallet_outlined),
-            selectedIcon: Icon(Icons.account_balance_wallet),
+            selectedIcon: Icon(Icons.account_balance_wallet, color: Color(0xFF4F46E5)),
             label: 'Balance',
           ),
         ],
@@ -74,9 +95,12 @@ class _EmployeeHomeScreenState extends State<EmployeeHomeScreen> {
 // ─────────────────────────────────────────────────────────────────────────────
 // Dashboard Tab
 // ─────────────────────────────────────────────────────────────────────────────
-
 class _DashboardTab extends StatelessWidget {
   const _DashboardTab();
+
+  String _getInitial(String name) {
+    return name.trim().isNotEmpty ? name.trim()[0].toUpperCase() : '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,21 +110,47 @@ class _DashboardTab extends StatelessWidget {
 
     final recentRequests =
         leaveProvider.getRequestsByEmployee(user.id).take(3).toList();
+
     final leaveTypes = leaveProvider.getActiveLeaveTypes();
     final unread = notifProvider.getUnreadCount(user.id);
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
           children: [
-            const Text('Welcome back,',
-                style: TextStyle(fontSize: 12, color: Colors.white70)),
-            Text(
-              user.name,
-              style: const TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+            // Profile Circle
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: Colors.white,
+              child: Text(
+                _getInitial(user.name),
+                style: const TextStyle(
+                  color: Color(0xFF4F46E5),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+            const SizedBox(width: 10),
+
+            // Welcome Text
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Welcome back,',
+                  style: TextStyle(fontSize: 12, color: Colors.white70),
+                ),
+                Text(
+                  user.name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -115,7 +165,8 @@ class _DashboardTab extends StatelessWidget {
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) => const NotificationsScreen()),
+                    builder: (_) => const NotificationsScreen(),
+                  ),
                 ),
               ),
               if (unread > 0)
@@ -131,7 +182,9 @@ class _DashboardTab extends StatelessWidget {
                     child: Text(
                       '$unread',
                       style: const TextStyle(
-                          color: Colors.white, fontSize: 9),
+                        color: Colors.white,
+                        fontSize: 9,
+                      ),
                     ),
                   ),
                 ),
@@ -141,17 +194,19 @@ class _DashboardTab extends StatelessWidget {
             icon: const Icon(Icons.person_outline),
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const ProfileScreen()),
+              MaterialPageRoute(
+                builder: (_) => const ProfileScreen(),
+              ),
             ),
           ),
         ],
       ),
+
       body: RefreshIndicator(
         onRefresh: () async => context.read<LeaveProvider>(),
         child: ListView(
           padding: const EdgeInsets.all(AppConstants.pagePadding),
           children: [
-            // ── Quick stats ──────────────────────────────────────────────
             Row(
               children: [
                 _QuickStat(
@@ -188,7 +243,6 @@ class _DashboardTab extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // ── Leave balance preview (first 2 types) ─────────────────────
             if (leaveTypes.isNotEmpty) ...[
               const Text(
                 'Leave Balance',
@@ -211,10 +265,10 @@ class _DashboardTab extends StatelessWidget {
               const SizedBox(height: 4),
             ],
 
-            // ── Recent requests ────────────────────────────────────────────
             const Text(
               'Recent Requests',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const SizedBox(height: 10),
 

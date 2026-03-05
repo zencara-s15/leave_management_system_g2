@@ -73,15 +73,41 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // ── Logo / App title ────────────────────────────────────
-                  // TODO: Replace with your own logo asset image
-                  const Icon(
-                    Icons.work_history_outlined,
-                    size: 72,
-                    color: AppColors.primary,
+                  // =========================
+                  /// TOP PURPLE HEADER
+                  /// =========================
+                  Container(
+                    height: 235,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(28),
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFF5B4BDB),
+                          Color(0xFF4A3FD1),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: Center(
+                      child: Container(
+                        width: 90,
+                        height: 90,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Icon(
+                          Icons.group_outlined,
+                          size: 50,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 10),
                   const Text(
-                    AppConstants.appName,
+                    AppConstants.appNameLogin,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 22,
@@ -158,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // ── Login button ────────────────────────────────────────
                   PrimaryButton(
-                    label: 'Sign In',
+                    label: 'Login',
                     isLoading: auth.isLoading,
                     icon: Icons.login,
                     onPressed: _handleLogin,
@@ -218,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _demoTile(
-      String role, String email, String password, Color color) {
+    String role, String email, String password, Color color) {
     return InkWell(
       onTap: () => _fillDemo(email, password),
       child: Padding(

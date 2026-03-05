@@ -6,7 +6,7 @@ class AppColors {
   AppColors._();
 
   // Primary brand colors
-  static const Color primary = Color(0xFF1565C0);       // Deep Blue
+  static const Color primary = Color(0xFF4F46E5);       // Deep Blue
   static const Color primaryLight = Color(0xFF5E92F3);
   static const Color primaryDark = Color(0xFF003C8F);
 

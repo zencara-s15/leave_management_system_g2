@@ -12,6 +12,7 @@ import 'screens/manager/manager_home_screen.dart';
 import 'services/storage_service.dart';
 import 'utils/app_colors.dart';
 import 'utils/app_constants.dart';
+import 'screens/splash/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,22 +50,6 @@ class LeaveManagementApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Check whether a user session already exists (auto-login)
-    final auth = context.read<AuthProvider>();
-    final Widget home;
-    if (auth.isLoggedIn) {
-      final user = auth.currentUser!;
-      if (user.isAdmin) {
-        home = const AdminHomeScreen();
-      } else if (user.isManager) {
-        home = const ManagerHomeScreen();
-      } else {
-        home = const EmployeeHomeScreen();
-      }
-    } else {
-      home = const LoginScreen();
-    }
-
     return MaterialApp(
       title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
@@ -98,7 +83,8 @@ class LeaveManagementApp extends StatelessWidget {
       ),
 
       // ── Routing ──────────────────────────────────────────────────────────
-      home: home,
+      // home: home,
+      home: const SplashScreen(),
       routes: {
         '/login': (_) => const LoginScreen(),
         '/employee-home': (_) => const EmployeeHomeScreen(),
