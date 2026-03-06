@@ -344,6 +344,10 @@ class _EmployeeFormSheetState extends State<_EmployeeFormSheet> {
     }
   }
 
+  void _handleCancel() {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final managers = context.read<LeaveProvider>().getManagers();
@@ -474,10 +478,24 @@ class _EmployeeFormSheetState extends State<_EmployeeFormSheet> {
                 ),
 
               const SizedBox(height: 20),
-              PrimaryButton(
-                label: _isEdit ? 'Save Changes' : 'Create User',
-                color: AppColors.adminColor,
-                onPressed: _handleSave,
+              Row(
+                children: [
+                  Expanded(
+                    child: SecondaryButton(
+                      label: 'Cancel',
+                      color: AppColors.adminColor,
+                      onPressed: _handleCancel,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: PrimaryButton(
+                      label: _isEdit ? 'Save Changes' : 'Create User',
+                      color: AppColors.adminColor,
+                      onPressed: _handleSave,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
             ],

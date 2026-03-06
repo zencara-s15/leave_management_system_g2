@@ -8,7 +8,12 @@ import '../../utils/app_constants.dart';
 import '../../widgets/leave_card_widget.dart';
 
 class LeaveHistoryScreen extends StatefulWidget {
-  const LeaveHistoryScreen({super.key});
+  final VoidCallback? onBackPressed;
+
+  const LeaveHistoryScreen({
+    super.key,
+    this.onBackPressed,
+  });
 
   @override
   State<LeaveHistoryScreen> createState() => _LeaveHistoryScreenState();
@@ -22,6 +27,8 @@ class _LeaveHistoryScreenState extends State<LeaveHistoryScreen> {
     final user = context.read<AuthProvider>().currentUser!;
     final leaveProvider = context.watch<LeaveProvider>();
     final allRequests = leaveProvider.getRequestsByEmployee(user.id);
+    final navigator = Navigator.of(context);
+    final canPop = navigator.canPop();
 
     final filtered = _filterStatus == 'all'
         ? allRequests
@@ -35,7 +42,18 @@ class _LeaveHistoryScreenState extends State<LeaveHistoryScreen> {
         title: const Text('Leave History'),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
-        automaticallyImplyLeading: false,
+        leading: (canPop || widget.onBackPressed != null)
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  if (canPop) {
+                    navigator.maybePop();
+                    return;
+                  }
+                  widget.onBackPressed?.call();
+                },
+              )
+            : null,
       ),
       body: Column(
         children: [
