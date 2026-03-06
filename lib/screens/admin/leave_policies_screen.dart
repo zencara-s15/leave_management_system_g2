@@ -61,26 +61,100 @@ class LeavePoliciesScreen extends StatelessWidget {
   void _confirmDelete(BuildContext context, LeaveTypeModel type) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Delete Policy'),
-        content: Text(
-            'Delete "${type.name}"? This cannot be undone.'),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel')),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.rejected,
-                foregroundColor: Colors.white),
-            onPressed: () {
-              Navigator.pop(context);
-              context.read<LeaveProvider>().deleteLeaveType(type.id);
-            },
-            child: const Text('Delete'),
+      barrierDismissible: false,
+      builder: (_) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
-        ],
-      ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 26),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 70,
+                  height: 70,
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.delete_outline,
+                    color: Colors.white,
+                    size: 36,
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                const Text(
+                  "Delete Policy",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                Text(
+                  'Are you sure you want to delete "${type.name}"?\nThis cannot be undone.',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          side: const BorderSide(color: Colors.grey),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text(
+                          "No",
+                          style: TextStyle(color: Colors.black87),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 12),
+
+                    /// YES BUTTON
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.rejected,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          context.read<LeaveProvider>().deleteLeaveType(type.id);
+                        },
+                        child: const Text("Yes"),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -267,6 +341,10 @@ class _PolicyFormSheetState extends State<_PolicyFormSheet> {
     );
   }
 
+  void _handleCancel() {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -355,10 +433,24 @@ class _PolicyFormSheetState extends State<_PolicyFormSheet> {
                 activeThumbColor: AppColors.adminColor,
               ),
               const SizedBox(height: 16),
-              PrimaryButton(
-                label: _isEdit ? 'Save Changes' : 'Create Policy',
-                color: AppColors.adminColor,
-                onPressed: _handleSave,
+              Row(
+                children: [
+                  Expanded(
+                    child: SecondaryButton(
+                      label: 'Cancel',
+                      color: AppColors.adminColor,
+                      onPressed: _handleCancel,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: PrimaryButton(
+                      label: _isEdit ? 'Save Changes' : 'Create Policy',
+                      color: AppColors.adminColor,
+                      onPressed: _handleSave,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
             ],
