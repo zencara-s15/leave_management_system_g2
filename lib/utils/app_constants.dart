@@ -4,6 +4,7 @@ class AppConstants {
 
   // App info
   static const String appName = 'Leave Management System';
+  static const String appNameLogin = 'Welcome Back to LMS!';
   static const String appVersion = '1.0.0';
 
   // SharedPreferences keys (used by StorageService)

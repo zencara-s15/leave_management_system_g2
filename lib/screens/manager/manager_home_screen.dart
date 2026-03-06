@@ -35,26 +35,46 @@ class _ManagerHomeScreenState extends State<ManagerHomeScreen> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
         onDestinationSelected: (i) => setState(() => _currentIndex = i),
-        indicatorColor: AppColors.managerColor.withValues(alpha: 0.15),
+        // make background white
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+
+        // remove pill/hover effect
+        indicatorColor: Colors.transparent,
+
+        // selected color
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const TextStyle(
+              color: Color(0xFF4F46E5),
+              fontWeight: FontWeight.w600,
+            );
+          }
+          return const TextStyle(
+            color: Colors.grey,
+            fontWeight: FontWeight.w500,
+          );
+        }),
+
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.dashboard_outlined),
-            selectedIcon: Icon(Icons.dashboard),
+            selectedIcon: Icon(Icons.dashboard, color: Color(0xFF4F46E5)),
             label: 'Dashboard',
           ),
           NavigationDestination(
             icon: Icon(Icons.pending_actions_outlined),
-            selectedIcon: Icon(Icons.pending_actions),
+            selectedIcon: Icon(Icons.pending_actions, color: Color(0xFF4F46E5)),
             label: 'Pending',
           ),
           NavigationDestination(
             icon: Icon(Icons.calendar_month_outlined),
-            selectedIcon: Icon(Icons.calendar_month),
+            selectedIcon: Icon(Icons.calendar_month, color: Color(0xFF4F46E5)),
             label: 'Team',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
+            selectedIcon: Icon(Icons.person, color: Color(0xFF4F46E5)),
             label: 'Profile',
           ),
         ],
@@ -69,6 +89,10 @@ class _ManagerHomeScreenState extends State<ManagerHomeScreen> {
 
 class _ManagerDashboardTab extends StatelessWidget {
   const _ManagerDashboardTab();
+
+  String _getInitial(String name) {
+    return name.trim().isNotEmpty ? name.trim()[0].toUpperCase() : '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,17 +118,40 @@ class _ManagerDashboardTab extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
           children: [
-            const Text('Manager Portal',
-                style: TextStyle(fontSize: 12, color: Colors.white70)),
-            Text(
-              user.name,
-              style: const TextStyle(
-                  fontSize: 16,
+            // Profile Circle
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: Colors.white.withValues(alpha: 0.5),
+              child: Text(
+                _getInitial(user.name),
+                style: const TextStyle(
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                ),
+              ),
+            ),
+
+            const SizedBox(width: 10),
+
+            // Title text
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Manager Portal',
+                  style: TextStyle(fontSize: 12, color: Colors.white70),
+                ),
+                Text(
+                  user.name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -119,7 +166,8 @@ class _ManagerDashboardTab extends StatelessWidget {
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) => const NotificationsScreen()),
+                    builder: (_) => const NotificationsScreen(),
+                  ),
                 ),
               ),
               if (unread > 0)
@@ -132,9 +180,13 @@ class _ManagerDashboardTab extends StatelessWidget {
                       color: AppColors.notificationBadge,
                       shape: BoxShape.circle,
                     ),
-                    child: Text('$unread',
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 9)),
+                    child: Text(
+                      '$unread',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 9,
+                      ),
+                    ),
                   ),
                 ),
             ],
